@@ -1,0 +1,14 @@
+[Unit]
+Description=Prometheus Exporter for Ambient Weather stations
+Documentation=https://github.com/kmulvey/ambient_exporter
+After=network-online.target
+
+[Service]
+User=root
+Group=root
+Restart=on-failure
+EnvironmentFile=-/etc/default/ambient_exporter
+ExecStart=/usr/bin/ambient_exporter -addr "${AMBIENT_ADDR:=:9600}" -elevation ${AMBIENT_ELEVATION:=0}
+
+[Install]
+WantedBy=multi-user.target
