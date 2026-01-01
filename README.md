@@ -1,6 +1,6 @@
 # ambient_exporter
 
-`ambient_exporter` is a Prometheus exporter for Ambient Weather stations. It receives weather data directly from your station (via the "Customized" server feature) and exposes it as Prometheus metrics.
+`ambient_exporter` is a Prometheus exporter for [Ambient Weather stations](https://ambientweather.com/). It receives weather data directly from your station (via the "Customized" server feature) and exposes it as Prometheus metrics.
 
 In addition to the raw data provided by the station, this exporter calculates several derived metrics such as Dew Point, Heat Index, Wind Chill, and Evapotranspiration.
 
