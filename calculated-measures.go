@@ -39,10 +39,13 @@ func calculateHeatIndex(tempC float64, humidity int) float64 {
 
 	// Heat index formula (less accurate at high altitude, but commonly used)
 	// Note: Some sources suggest heat index shouldn't be used above ~3000ft
+	tempFSq := tempF * tempF
+	humiditySq := float64(humidity) * float64(humidity)
+
 	hiF := -42.379 + 2.04901523*tempF + 10.14333127*float64(humidity) - 0.22475541*tempF*float64(humidity) -
-		6.83783*math.Pow(10, -3)*math.Pow(tempF, 2) - 5.481717*math.Pow(10, -2)*math.Pow(float64(humidity), 2) +
-		1.22874*math.Pow(10, -3)*math.Pow(tempF, 2)*float64(humidity) + 8.5282*math.Pow(10, -4)*tempF*math.Pow(float64(humidity), 2) -
-		1.99*math.Pow(10, -6)*math.Pow(tempF, 2)*math.Pow(float64(humidity), 2)
+		6.83783*math.Pow(10, -3)*tempFSq - 5.481717*math.Pow(10, -2)*humiditySq +
+		1.22874*math.Pow(10, -3)*tempFSq*float64(humidity) + 8.5282*math.Pow(10, -4)*tempF*humiditySq -
+		1.99*math.Pow(10, -6)*tempFSq*humiditySq
 
 	// Convert back to Celsius
 	hiC := (hiF - 32.0) * 5.0 / 9.0
@@ -120,7 +123,8 @@ func calculateEvapotranspiration(tempC float64, humidity int, windSpeedMph float
 	gamma := 0.665 * math.Pow(10, -3) * atmosphericPressure
 
 	// Slope of saturation vapor pressure curve
-	delta := 4098 * (0.6108 * math.Exp((17.27*tempC)/(tempC+237.3))) / math.Pow(tempC+237.3, 2)
+	tempAdjust := tempC + 237.3
+	delta := 4098 * (0.6108 * math.Exp((17.27*tempC)/tempAdjust)) / (tempAdjust * tempAdjust)
 
 	// Saturation vapor pressure
 	es := 0.6108 * math.Exp((17.27*tempC)/(tempC+237.3))

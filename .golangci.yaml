@@ -1,7 +1,4 @@
-# Options for analysis running.
-# why windows fails gofmt:
-# https://github.com/golangci/golangci-lint/issues/1018
-# https://github.com/golangci/golangci-lint/issues/580
+version: 2
 run:
   concurrency: 10
   timeout: 10m
@@ -22,15 +19,17 @@ linters:
     - mnd # magic numbers
     - depguard # deps white list
     - exhaustruct # finds structures with uninitialized fields
-    - gci # import formatting
     - gomoddirectives # go.mod linting
-    - gofumpt # aggressive gofmt
     - cyclop # TEMP ... should be addressed
-    - tenv # Replaced by usetesting.
     - gochecknoglobals # who cares about prom globals
     - godot # periods at end of comments
     - noctx # context not used in this codebase
     - gochecknoinits # we use init for prometheus metrics registration
+
+formatters:
+  disable:
+    - gci # import formatting
+    - gofumpt # aggressive gofmt
 
 linters-settings:
   govet:
