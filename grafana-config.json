@@ -37,7 +37,7 @@
     },
     {
       "type": "panel",
-      "id": "fatcloud-windrose-panel",
+      "id": "operato-windrose-panel",
       "name": "Wind Rose",
       "version": "1.0.0"
     }
@@ -1167,11 +1167,11 @@
       },
       "id": 11,
       "options": {
-        "angleField": "winddir",
+        "angleField": "wind_direction",
         "legend": {
           "show": true
         },
-        "speedField": "windspeed",
+        "speedField": "wind_speed",
         "speedUnits": "mph",
         "calm": {
           "threshold": 0.5,
@@ -1187,9 +1187,9 @@
           },
           "editorMode": "code",
           "expr": "ambient_weather_wind_direction_degrees",
-          "format": "table",
+          "format": "time_series",
           "instant": false,
-          "legendFormat": "winddir",
+          "legendFormat": "wind_direction",
           "range": true,
           "refId": "A"
         },
@@ -1200,14 +1200,23 @@
           },
           "editorMode": "code",
           "expr": "ambient_weather_wind_speed_mph",
-          "format": "table",
+          "format": "time_series",
           "instant": false,
-          "legendFormat": "windspeed",
+          "legendFormat": "wind_speed",
           "range": true,
           "refId": "B"
         }
       ],
       "title": "Wind Rose",
+      "transformations": [
+        {
+          "id": "joinByField",
+          "options": {
+            "byField": "Time",
+            "mode": "outer"
+          }
+        }
+      ],
       "type": "operato-windrose-panel"
     },
     {
