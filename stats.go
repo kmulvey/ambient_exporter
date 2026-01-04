@@ -280,7 +280,7 @@ func updateMetrics(r *WeatherReport) {
 	windSpeedMph.Set(r.WindSpeedMph)
 	windGustMph.Set(r.WindGustMph)
 	maxDailyGust.Set(r.MaxDailyGust)
-	windDir.Set(float64(r.WindDir))
+	windDir.Set(r.WindDir)
 	uvIndex.Set(float64(r.UV))
 	solarRadiation.Set(r.SolarRadiation)
 	batteryOut.Set(float64(r.BattOut))

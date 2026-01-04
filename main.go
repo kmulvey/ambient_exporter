@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
+	"math"
 	"net/http"
 	"net/url"
 	"os"
@@ -30,7 +31,7 @@ type WeatherReport struct {
 	WindSpeedMph   float64 `json:"windspeedmph"`
 	WindGustMph    float64 `json:"windgustmph"`
 	MaxDailyGust   float64 `json:"maxdailygust"`
-	WindDir        int     `json:"winddir"`
+	WindDir        float64 `json:"winddir"`
 	UV             int     `json:"uv"`
 	SolarRadiation float64 `json:"solarradiation"`
 	BattOut        int     `json:"battout"`
@@ -73,10 +74,12 @@ func main() {
 
 	var addr string
 	var elevationFt float64
+	var windDirOffsetDeg float64
 	var v bool
 
 	flag.StringVar(&addr, "addr", ":9600", "address for the http server")
 	flag.Float64Var(&elevationFt, "elevation", 0, "station elevation in feet")
+	flag.Float64Var(&windDirOffsetDeg, "wind-dir-offset-deg", 0, "degrees clockwise to add to the reported wind direction (use to correct station mounting alignment; may be negative)")
 	flag.BoolVar(&v, "version", false, "print version")
 	flag.BoolVar(&v, "v", false, "print version")
 	flag.Parse()
@@ -107,7 +110,7 @@ func main() {
 		}
 		http.Handle("/metrics", promhttp.Handler())
 		http.HandleFunc("/data/report/", func(w http.ResponseWriter, r *http.Request) {
-			reportHandler(w, r, elevationFt)
+			reportHandler(w, r, elevationFt, windDirOffsetDeg)
 		})
 		if err := srv.ListenAndServe(); err != nil {
 			log.Fatal(err)
@@ -118,7 +121,7 @@ func main() {
 	os.Exit(0)
 }
 
-func reportHandler(w http.ResponseWriter, r *http.Request, elevationFt float64) {
+func reportHandler(w http.ResponseWriter, r *http.Request, elevationFt float64, windDirOffsetDeg float64) {
 	if r.Method != http.MethodGet {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		return
@@ -141,7 +144,7 @@ func reportHandler(w http.ResponseWriter, r *http.Request, elevationFt float64) 
 		return
 	}
 
-	report, err := parseWeatherReport(query)
+	report, err := parseWeatherReport(query, windDirOffsetDeg)
 	if err != nil {
 		log.Errorf("Failed to parse weather report: %v", err)
 		http.Error(w, "Bad request", http.StatusBadRequest)
@@ -160,7 +163,7 @@ func reportHandler(w http.ResponseWriter, r *http.Request, elevationFt float64) 
 	}
 }
 
-func parseWeatherReport(query url.Values) (*WeatherReport, error) {
+func parseWeatherReport(query url.Values, windDirOffsetDeg float64) (*WeatherReport, error) {
 	report := &WeatherReport{
 		PassKey:     query.Get("PASSKEY"),
 		StationType: query.Get("stationtype"),
@@ -183,7 +186,7 @@ func parseWeatherReport(query url.Values) (*WeatherReport, error) {
 	report.WindSpeedMph = parseFloat("windspeedmph", query)
 	report.WindGustMph = parseFloat("windgustmph", query)
 	report.MaxDailyGust = parseFloat("maxdailygust", query)
-	report.WindDir = parseInt("winddir", query)
+	report.WindDir = normalizeDegrees(parseFloat("winddir", query) + windDirOffsetDeg)
 	report.UV = parseInt("uv", query)
 	report.SolarRadiation = parseFloat("solarradiation", query)
 	report.BattOut = parseInt("battout", query)
@@ -206,6 +209,14 @@ func parseWeatherReport(query url.Values) (*WeatherReport, error) {
 	report.BaromAbsIn = parseFloat("baromabsin", query)
 
 	return report, nil
+}
+
+func normalizeDegrees(deg float64) float64 {
+	deg = math.Mod(deg, 360)
+	if deg < 0 {
+		deg += 360
+	}
+	return deg
 }
 
 func parseFloat(key string, query url.Values) float64 {

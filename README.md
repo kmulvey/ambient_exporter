@@ -49,6 +49,7 @@ The exporter requires your station's elevation (in feet) to accurately calculate
 |------|-------------|---------|
 | `-addr` | Address for the HTTP server to listen on | `:9600` |
 | `-elevation` | Station elevation in feet (**Required**) | `0` |
+| `-wind-dir-offset-deg` | Degrees clockwise to add to the reported wind direction (use to correct station mounting alignment; may be negative) | `0` |
 | `-version` | Print version information | `false` |
 
 ## Weather Station Configuration
