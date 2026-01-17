@@ -10,7 +10,8 @@ Restart=on-failure
 EnvironmentFile=-/etc/default/ambient_exporter
 Environment="AMBIENT_ADDR=:9600"
 Environment="AMBIENT_ELEVATION=0"
-ExecStart=/usr/bin/ambient_exporter -addr $AMBIENT_ADDR -elevation $AMBIENT_ELEVATION
+Environment="AMBIENT_WIND_DIRECTION_OFFSET=0"
+ExecStart=/usr/bin/ambient_exporter -addr $AMBIENT_ADDR -elevation $AMBIENT_ELEVATION -wind-dir-offset-deg $AMBIENT_WIND_DIRECTION_OFFSET
 
 [Install]
 WantedBy=multi-user.target
