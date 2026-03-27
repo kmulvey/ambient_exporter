@@ -32,7 +32,7 @@ release:
       
 archives:
   - id: dist
-    builds:
+    ids:
       - ambient_exporter
     name_template: >-
       {{ .ProjectName }}_
@@ -58,7 +58,7 @@ nfpms:
 
     package_name: ambient_exporter
 
-    builds:
+    ids:
       - ambient_exporter
 
     # Your app's vendor.
