@@ -84,10 +84,6 @@ func main() {
 	flag.BoolVar(&v, "v", false, "print version")
 	flag.Parse()
 
-	if elevationFt == 0 {
-		log.Fatal("elevation is required")
-	}
-
 	if v {
 		var verPrinter = printer.New()
 		var info = version.Get()
@@ -161,6 +157,8 @@ func reportHandler(w http.ResponseWriter, r *http.Request, elevationFt float64, 
 	if err := json.NewEncoder(w).Encode(map[string]string{"status": "received"}); err != nil {
 		log.Errorf("Failed to encode response: %v", err)
 	}
+
+	log.Infof("received a report: %fC", report.Temp)
 }
 
 func parseWeatherReport(query url.Values, windDirOffsetDeg float64) (*WeatherReport, error) {
