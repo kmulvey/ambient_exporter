@@ -1,0 +1,6 @@
+[Unit]
+Description=WiFi watchdog for ambient_exporter
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/wifi-watchdog.sh

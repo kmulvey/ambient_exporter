@@ -101,6 +101,14 @@ nfpms:
       - src: ambient_exporter.service
         dst: /etc/systemd/system/ambient_exporter.service
 
+      # WiFi watchdog for brcmfmac silent hang (Raspberry Pi BCM4345)
+      - src: wifi-watchdog.sh
+        dst: /usr/share/ambient_exporter/wifi-watchdog.sh
+      - src: wifi-watchdog.timer
+        dst: /usr/share/ambient_exporter/wifi-watchdog.timer
+      - src: wifi-watchdog.service
+        dst: /usr/share/ambient_exporter/wifi-watchdog.service
+
     # Custom configuration applied only to the RPM packager.
     rpm:
       group: root
