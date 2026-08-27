@@ -43,8 +43,10 @@ archives:
     files:
       - ambient_exporter.service
       - LICENSE
-      - grafana-config.json
-      
+      - grafana-classic.json
+      - grafana-v1.json
+      - grafana-v2.json
+
 checksum:
   name_template: 'checksums.txt'
 
