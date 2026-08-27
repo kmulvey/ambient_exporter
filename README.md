@@ -1,4 +1,6 @@
 # ambient_exporter
+[![Build](https://github.com/kmulvey/ambient_exporter/actions/workflows/build.yml/badge.svg)](https://github.com/kmulvey/ambient_exporter/actions/workflows/build.yml) [![Release](https://github.com/kmulvey/ambient_exporter/actions/workflows/release.yml/badge.svg)](https://github.com/kmulvey/ambient_exporter/actions/workflows/release.yml) [![Go Reference](https://pkg.go.dev/badge/github.com/kmulvey/ambient_exporter.svg)](https://pkg.go.dev/github.com/kmulvey/ambient_exporter)
+
 
 `ambient_exporter` is a Prometheus exporter for [Ambient Weather stations](https://ambientweather.com/). It receives weather data directly from your station (via the "Customized" server feature) and exposes it as Prometheus metrics.
 
